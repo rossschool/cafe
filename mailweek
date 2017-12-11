@@ -1,0 +1,248 @@
+var localTimeZone = "New York";
+var dateFormatForFileNameString = "MMMM dd";
+
+function CreateNewWeeklySheet() {
+/**
+ * Makes a duplicate of the ACTIVE weekly sheet and rename the active sheet to Month End date based on cell A1
+ */
+ var ss = SpreadsheetApp.getActiveSpreadsheet()
+ SpreadsheetApp.getActiveSpreadsheet().duplicateActiveSheet();
+
+// The code below will rename the active sheet to Month End date based on cell A1
+ var myValue = SpreadsheetApp.getActiveSheet().getRange("A1").getValue();
+ var dateString = getDateString_(myValue);
+ SpreadsheetApp.getActiveSpreadsheet().renameActiveSheet(dateString);
+}
+
+//Function below to get Date as a string
+function getDateString_(dateValue) {
+      return Utilities.formatDate(dateValue, localTimeZone,
+                                  dateFormatForFileNameString);
+}
+
+function emailReminder() {
+    /**
+ * EMAILS reminder message weekly to editors
+ */
+  // Change LOG * 2016-09-05 add owner to email list -WM
+  // * changed wording 2016-09-05 "Reminder - RESIDENTIAL LIFE SUNDAY PACK OUTS REQUEST" -wm
+var today = new Date()
+        .toLocaleDateString();
+var sheet = SpreadsheetApp.getActive()
+        .getSheetByName('Tracker');
+// Below Code HARD CODES THIS code to this SPREADSHEET if you make a copy of this sheet don't forget to change this dummy!
+  var file = DriveApp.getFileById('1jSLELAjNMAc6LswSrvjnnpDE85y4DBpfZY9JscwWjHk');
+  var url = file.getUrl()
+  var editors = file.getEditors();
+  var activeUser = Session.getActiveUser();editors.push(activeUser);
+  var subject = "RESIDENTIAL LIFE Reminder - SUNDAY PACK OUTS REQUESTS DUE"; //changed wording 3/3/17 -wm
+  var htmlBody = "Please fill out the \"RESIDENTIAL LIFE SUNDAY PACK OUTS\" Google Sheet before Tuesday at 3:00 PM to ensure your order is filled. Thank You. \<p>" + url;
+ 
+  // Loop through the email address of all users who are editors.
+ for (var i = 0; i < editors.length; i++) {
+      GmailApp.sendEmail(editors[i].getEmail(), subject, htmlBody); 
+   //Logger.log(editors[i].getEmail());
+ }
+}
+
+function inlineImage() {
+// This code fetches the Ross logo, inlines them in an email
+ // and sends the email
+   
+   var RossLogoUrl =
+         "http://bbk12e1-cdn.myschoolcdn.com/ftpimages/260/podium/logo3.gif";
+  
+   var RossLogoBlob = UrlFetchApp
+                           .fetch(RossLogoUrl)
+                           .getBlob()
+                           .setName("RossLogoBlob");
+   MailApp.sendEmail({
+     to: "rvolinski@ross.org",
+     subject: "Ross Logo",
+     //htmlBody: "inline Ross Logo <p> <img src='cid:RossLogo' style='vertical-align:middle'>",
+     
+       htmlBody: "inline Ross Logo <p> <div style='text-align: center'><img src='cid:RossLogo' width='100' /></div>",
+     
+     inlineImages:
+       {
+         
+         RossLogo: RossLogoBlob
+       }
+   });
+ }
+function onOpen(){
+  /**
+ * Selects/sets the current Weekly sheet and hides last weeks 
+ * This funtion works everytime sheet is opened --- gets error if lastweek sheet has been already hidden
+  * Change LOG * 
+  * 2017-01-12 - HIDES last weeks sheet -WM
+  * 2017-11-26 working on changing to week numbers instead of doy -WM
+  */
+  var now = new Date();
+  var start = new Date(now.getFullYear(), 0, 0);
+  var diff = now - start;
+  var oneDay = 1000 * 60 * 60 * 24;
+  var day = Math.floor(diff / oneDay);
+    
+Date.prototype.getWeek = function() {
+    var onejan = new Date(this.getFullYear(),0,1);
+    weeksnum = Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+    return weeksnum;
+}
+var now = new Date();
+  
+    //Below code logs day of year
+  Logger.log("DAY OF  YEAR "+day);
+   //Below code logs week of year WHICH SHOULD BE USED INSTEAD OF DAY? -future change
+  Logger.log("WEEK OF  YEAR "+now.getWeek());
+    // Below code logs the number of sheets in the active spreadsheet.
+  Logger.log("Total Sheets "+ SpreadsheetApp.getActiveSpreadsheet().getNumSheets());
+  
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+  //old 2017 dates need to update 2018 dates
+//if (day >= 1 && day  <= 6) {ss.setActiveSheet(ss.getSheetByName("January 5"));var sheet = ss.getSheetByName('December 8');sheet.hideSheet();}
+//if (day >= 7 && day  <= 13){ss.setActiveSheet(ss.getSheetByName('January 12'));var sheet = ss.getSheetByName('January 5');sheet.hideSheet();}
+//if (day >= 14 && day  <=20){ss.setActiveSheet(ss.getSheetByName('January 19'));var sheet = ss.getSheetByName('January 12');sheet.hideSheet();}
+//if (day >= 21 && day  <=26){ss.setActiveSheet(ss.getSheetByName('January 26'));var sheet = ss.getSheetByName('January 19');sheet.hideSheet();}
+//if (day >= 26 && day  <=33){ss.setActiveSheet(ss.getSheetByName('February 2'));var sheet = ss.getSheetByName('January 26');sheet.hideSheet();}
+//if (day >= 33 && day  <=40){ss.setActiveSheet(ss.getSheetByName('February 9'));var sheet = ss.getSheetByName('February 2');sheet.hideSheet();}
+//if (day >= 40 && day  <=47){ss.setActiveSheet(ss.getSheetByName('February 16'));var sheet = ss.getSheetByName('February 9');sheet.hideSheet();}
+//if (day >= 47 && day  <=54){ss.setActiveSheet(ss.getSheetByName('February 23'));var sheet = ss.getSheetByName('February 16');sheet.hideSheet();}
+//if (day >= 54 && day  <=61){ss.setActiveSheet(ss.getSheetByName('March 02'));var sheet = ss.getSheetByName('February 23');sheet.hideSheet();}
+//if (day >= 62 && day  <=68){ss.setActiveSheet(ss.getSheetByName('March 09'));var sheet = ss.getSheetByName('March 02');sheet.hideSheet();}
+//if (day >= 69 && day  <=75){ss.setActiveSheet(ss.getSheetByName('March 16'));var sheet = ss.getSheetByName('March 09');sheet.hideSheet();}
+//if (day >= 76 && day  <=82){ss.setActiveSheet(ss.getSheetByName('March 23'));var sheet = ss.getSheetByName('March 16');sheet.hideSheet();}
+//if (day >= 83 && day  <=89){ss.setActiveSheet(ss.getSheetByName('March 30'));var sheet = ss.getSheetByName('March 23');sheet.hideSheet();}
+//if (day >= 90 && day  <=96){ss.setActiveSheet(ss.getSheetByName('April 06'));var sheet = ss.getSheetByName('March 30');sheet.hideSheet();}
+//change setup to week number test should be easier to figure out - wm 11/26/17
+ 
+ //New by week number instead of doy
+  // what day of the week does it rollover?
+  //var last = first + 6; // last day is the first day + 6
+  if (weeksnum >=47 && weeksnum <=48){Logger.log("Test of Week -GOOD");}
+  // START SPRING BREAK
+//if (day >= 96 && day  <=103){ss.setActiveSheet(ss.getSheetByName('April 13'));var sheet = ss.getSheetByName('April 06');sheet.hideSheet();}
+//if (day >= 103 && day  <=110){ss.setActiveSheet(ss.getSheetByName('April 20'));var sheet = ss.getSheetByName('March 30');sheet.hideSheet();}
+// END SPRING BREAK
+if (day >= 110 && day  <=117){ss.setActiveSheet(ss.getSheetByName('April 27'));var sheet = ss.getSheetByName('April 06');sheet.hideSheet();}
+if (day >= 117 && day  <=124){ss.setActiveSheet(ss.getSheetByName('May 4'));var sheet = ss.getSheetByName('April 27');sheet.hideSheet();}
+if (day >= 124 && day  <=131){ss.setActiveSheet(ss.getSheetByName('May 11'));var sheet = ss.getSheetByName('May 4');sheet.hideSheet();}
+if (day >= 131 && day  <=138){ss.setActiveSheet(ss.getSheetByName('May 18'));var sheet = ss.getSheetByName('May 11');sheet.hideSheet();}
+if (day >= 138 && day  <=145){ss.setActiveSheet(ss.getSheetByName('May 25'));var sheet = ss.getSheetByName('May 18');sheet.hideSheet();}
+if (day >= 145 && day  <=152){ss.setActiveSheet(ss.getSheetByName('June 1'));var sheet = ss.getSheetByName('May 25');sheet.hideSheet();}
+if (day >= 152 && day  <=159){ss.setActiveSheet(ss.getSheetByName('June 8'));var sheet = ss.getSheetByName('June 1');sheet.hideSheet();}
+if (day >= 159 && day  <=166){ss.setActiveSheet(ss.getSheetByName('June 15'));var sheet = ss.getSheetByName('June 8');sheet.hideSheet();}
+// END SCHOOL YEAR
+  
+//START SCHOOL YEAR  
+  //updated through xmas break 2017
+if (day >=243 && day  <= 250){ss.setActiveSheet(ss.getSheetByName('Sep-07'));var sheet = ss.getSheetByName('June 8');sheet.hideSheet();}
+if (day >=251 && day  <= 257){ss.setActiveSheet(ss.getSheetByName('Sep-14'));var sheet = ss.getSheetByName('Sep-07');sheet.hideSheet();}
+if (day >=258 && day  <= 264){ss.setActiveSheet(ss.getSheetByName('Sep-21'));var sheet = ss.getSheetByName('Sep-14');sheet.hideSheet();}
+if (day >=265 && day  <= 271){ss.setActiveSheet(ss.getSheetByName('Sep-28'));var sheet = ss.getSheetByName('Sep-21');sheet.hideSheet();}
+if (day >=272 && day  <= 278){ss.setActiveSheet(ss.getSheetByName('Oct-05'));var sheet = ss.getSheetByName('Sep-28');sheet.hideSheet();}
+if (day >=279 && day  <= 285){ss.setActiveSheet(ss.getSheetByName('Oct-12'));var sheet = ss.getSheetByName('Oct-05');sheet.hideSheet();}
+if (day >=286 && day  <= 292){ss.setActiveSheet(ss.getSheetByName('Oct-19'));var sheet = ss.getSheetByName('Oct-12');sheet.hideSheet();}
+if (day >=293 && day  <= 299){ss.setActiveSheet(ss.getSheetByName('Oct-26'));var sheet = ss.getSheetByName('Oct-19');sheet.hideSheet();}
+if (day >=300 && day  <= 306){ss.setActiveSheet(ss.getSheetByName('Nov-02'));var sheet = ss.getSheetByName('Oct-26');sheet.hideSheet();}
+if (day >=307 && day  <= 313){ss.setActiveSheet(ss.getSheetByName('Nov-09'));var sheet = ss.getSheetByName('Nov-02');sheet.hideSheet();}
+if (day >=314 && day  <= 320){ss.setActiveSheet(ss.getSheetByName('Nov-16'));var sheet = ss.getSheetByName('Nov-09');sheet.hideSheet();}
+if (day >=327 && day  <= 333){ss.setActiveSheet(ss.getSheetByName('Nov-30'));var sheet = ss.getSheetByName('Nov 16');sheet.hideSheet();}
+//if (day >=327 && day  <= 333){ss.setActiveSheet(ss.getSheetByName('Dec-07'));var sheet = ss.getSheetByName('Nov-30');sheet.hideSheet();}
+if (day >=334 && day  <= 340){ss.setActiveSheet(ss.getSheetByName('Dec-14'));var sheet = ss.getSheetByName('Dec-07');sheet.hideSheet();}
+//END updated 2017 dates
+// START WINTER BREAK
+if (day >= 345 && day  <= 365){ss.setActiveSheet(ss.getSheetByName("January 5"));} 
+
+else if (day >= 366) {
+  Logger.log("ERROR: day of year-"+day+ " not found in search of dates(ELSEIF)?");                     }
+}
+
+function cloneGoogleSheet() {
+  
+  var name = "labnol";
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Template').copyTo(ss);
+  
+  /* Before cloning the sheet, delete any previous copy */
+  //var old = ss.getSheetByName(name);
+  //if (old) ss.deleteSheet(old); // or old.setName(new Name);
+  
+  SpreadsheetApp.flush(); // Utilities.sleep(2000);
+  sheet.setName(name);
+
+  /* Make the new sheet active */
+  ss.setActiveSheet(sheet);
+
+}
+function createFutureSheets() {
+  // var sheet = SpreadsheetApp.getActiveSheet();
+ // var data = sheet.getDataRange().getValues();
+ // for (var i = 0; i < data.length; i++) {
+ //   Logger.log('Week: ' + data[i][0]);
+ 
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = ss.getActiveSheet();
+var template1 = ss.getSheetByName('Master').copyTo(ss);
+var last = sheet.getLastRow();//identifies the last active row on the sheet
+
+//loop through the code until each row creates a tab.
+for(var i=0; i<last; i++){
+
+var tabName = sheet.getRange(i+1,1).getValue();//get the range in column A and get the value.
+
+var create = ss.insertSheet(tabName);//create a new sheet with the value
+}
+  }
+function hideAllSheets(){
+   hideAllSheetsExcept('Instructions');
+}
+function hideAllSheetsExcept(sheetName) {
+  var sheets=SpreadsheetApp.getActiveSpreadsheet().getSheets();
+
+  for(var i =0;i<sheets.length;i++){
+    Logger.log(i);
+    if(sheets[i].getName()!=sheetName){
+      sheets[i].hideSheet();
+    }
+  }
+}
+function deleteSheets() {
+  //var deleteSheetsContaining = Browser.inputBox("Delete sheets with names containing:"); 
+  //if (sheetMatch(deleteSheetsContaining)){
+    for (var i = 0; i < sheetsCount; i++){
+      var sheet = sheets[i]; 
+      var sheetName = sheet.getName();
+      Logger.log(sheetName);
+     //if (sheetName.indexOf(deleteSheetsContaining.toString()) !== -1){
+    //   Logger.log("DELETE!");
+    ss.deleteSheet(sheet);
+      }
+   // } 
+  //} else {
+  //   noMatchAlert();
+//  }
+}
+function showSheets() {
+  var showSheetsContaining = Browser.inputBox("Show sheets with names containing:"); 
+  if (sheetMatch(showSheetsContaining)){
+    for (var i = 0; i < sheetsCount; i++){
+      var sheet = sheets[i]; 
+      var sheetName = sheet.getName();
+      Logger.log(sheetName); 
+      if (sheetName.indexOf(showSheetsContaining.toString()) !== -1){
+        Logger.log("SHOW!");
+        sheet.showSheet();
+      }
+    } 
+  } else {
+    noMatchAlert();
+  }
+}
+function removeHidden() {
+    var ss = SpreadsheetApp.getActive()
+    ss.getSheets()
+        .map(function (sh) {
+            if (sh.isSheetVisible()) ss.deleteSheet(sh)
+        })
+}
