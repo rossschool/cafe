@@ -36,7 +36,7 @@ var sheet = SpreadsheetApp.getActive()
   var editors = file.getEditors();
   var activeUser = Session.getActiveUser();editors.push(activeUser);
   var subject = "RESIDENTIAL LIFE Reminder - SUNDAY PACK OUTS REQUESTS DUE"; //changed wording 3/3/17 -wm
-  var htmlBody = "Please fill out the \"RESIDENTIAL LIFE SUNDAY PACK OUTS\" Google Sheet before Tuesday at 3:00 PM to ensure your order is filled. Thank You. \<p>" + url;
+  var htmlBody = "Please fill out the \"RESIDENTIAL LIFE SUNDAY PACK OUTS\" Google Sheet before Tuesday at 3:00 PM to ensure your order is filled. Thank You." + url;
  
   // Loop through the email address of all users who are editors.
  for (var i = 0; i < editors.length; i++) {
@@ -70,13 +70,14 @@ function inlineImage() {
        }
    });
  }
-function onOpen(){
+function upWeek(){
   /**
  * Selects/sets the current Weekly sheet and hides last weeks 
  * This funtion works everytime sheet is opened --- gets error if lastweek sheet has been already hidden
   * Change LOG * 
   * 2017-01-12 - HIDES last weeks sheet -WM
-  * 2017-11-26 working on changing to week numbers instead of doy -WM
+  * 2017-11-26 changed to week numbers instead of doy -WM
+  * 2018 03-06 - changed to trigger with delay. worked when manually run. didn't work as trigger
   */
   var now = new Date();
   var start = new Date(now.getFullYear(), 0, 0);
@@ -93,47 +94,50 @@ var now = new Date();
   
     //Below code logs day of year
   Logger.log("DAY OF  YEAR "+day);
-   //Below code logs week of year WHICH SHOULD BE USED INSTEAD OF DAY? -future change
+   //Below code logs week of year 
   Logger.log("WEEK OF  YEAR "+now.getWeek());
     // Below code logs the number of sheets in the active spreadsheet.
   Logger.log("Total Sheets "+ SpreadsheetApp.getActiveSpreadsheet().getNumSheets());
   
 var ss = SpreadsheetApp.getActiveSpreadsheet();
-  //old 2017 dates need to update 2018 dates
-//if (day >= 1 && day  <= 6) {ss.setActiveSheet(ss.getSheetByName("January 5"));var sheet = ss.getSheetByName('December 8');sheet.hideSheet();}
-//if (day >= 7 && day  <= 13){ss.setActiveSheet(ss.getSheetByName('January 12'));var sheet = ss.getSheetByName('January 5');sheet.hideSheet();}
-//if (day >= 14 && day  <=20){ss.setActiveSheet(ss.getSheetByName('January 19'));var sheet = ss.getSheetByName('January 12');sheet.hideSheet();}
-//if (day >= 21 && day  <=26){ss.setActiveSheet(ss.getSheetByName('January 26'));var sheet = ss.getSheetByName('January 19');sheet.hideSheet();}
-//if (day >= 26 && day  <=33){ss.setActiveSheet(ss.getSheetByName('February 2'));var sheet = ss.getSheetByName('January 26');sheet.hideSheet();}
-//if (day >= 33 && day  <=40){ss.setActiveSheet(ss.getSheetByName('February 9'));var sheet = ss.getSheetByName('February 2');sheet.hideSheet();}
-//if (day >= 40 && day  <=47){ss.setActiveSheet(ss.getSheetByName('February 16'));var sheet = ss.getSheetByName('February 9');sheet.hideSheet();}
-//if (day >= 47 && day  <=54){ss.setActiveSheet(ss.getSheetByName('February 23'));var sheet = ss.getSheetByName('February 16');sheet.hideSheet();}
-//if (day >= 54 && day  <=61){ss.setActiveSheet(ss.getSheetByName('March 02'));var sheet = ss.getSheetByName('February 23');sheet.hideSheet();}
-//if (day >= 62 && day  <=68){ss.setActiveSheet(ss.getSheetByName('March 09'));var sheet = ss.getSheetByName('March 02');sheet.hideSheet();}
-//if (day >= 69 && day  <=75){ss.setActiveSheet(ss.getSheetByName('March 16'));var sheet = ss.getSheetByName('March 09');sheet.hideSheet();}
-//if (day >= 76 && day  <=82){ss.setActiveSheet(ss.getSheetByName('March 23'));var sheet = ss.getSheetByName('March 16');sheet.hideSheet();}
-//if (day >= 83 && day  <=89){ss.setActiveSheet(ss.getSheetByName('March 30'));var sheet = ss.getSheetByName('March 23');sheet.hideSheet();}
-//if (day >= 90 && day  <=96){ss.setActiveSheet(ss.getSheetByName('April 06'));var sheet = ss.getSheetByName('March 30');sheet.hideSheet();}
-//change setup to week number test should be easier to figure out - wm 11/26/17
- 
- //New by week number instead of doy
-  // what day of the week does it rollover?
-  //var last = first + 6; // last day is the first day + 6
-  if (weeksnum >=47 && weeksnum <=48){Logger.log("Test of Week -GOOD");}
-  // START SPRING BREAK
-//if (day >= 96 && day  <=103){ss.setActiveSheet(ss.getSheetByName('April 13'));var sheet = ss.getSheetByName('April 06');sheet.hideSheet();}
-//if (day >= 103 && day  <=110){ss.setActiveSheet(ss.getSheetByName('April 20'));var sheet = ss.getSheetByName('March 30');sheet.hideSheet();}
-// END SPRING BREAK
-if (day >= 110 && day  <=117){ss.setActiveSheet(ss.getSheetByName('April 27'));var sheet = ss.getSheetByName('April 06');sheet.hideSheet();}
-if (day >= 117 && day  <=124){ss.setActiveSheet(ss.getSheetByName('May 4'));var sheet = ss.getSheetByName('April 27');sheet.hideSheet();}
-if (day >= 124 && day  <=131){ss.setActiveSheet(ss.getSheetByName('May 11'));var sheet = ss.getSheetByName('May 4');sheet.hideSheet();}
-if (day >= 131 && day  <=138){ss.setActiveSheet(ss.getSheetByName('May 18'));var sheet = ss.getSheetByName('May 11');sheet.hideSheet();}
-if (day >= 138 && day  <=145){ss.setActiveSheet(ss.getSheetByName('May 25'));var sheet = ss.getSheetByName('May 18');sheet.hideSheet();}
-if (day >= 145 && day  <=152){ss.setActiveSheet(ss.getSheetByName('June 1'));var sheet = ss.getSheetByName('May 25');sheet.hideSheet();}
-if (day >= 152 && day  <=159){ss.setActiveSheet(ss.getSheetByName('June 8'));var sheet = ss.getSheetByName('June 1');sheet.hideSheet();}
-if (day >= 159 && day  <=166){ss.setActiveSheet(ss.getSheetByName('June 15'));var sheet = ss.getSheetByName('June 8');sheet.hideSheet();}
+  //changed setup to week number -- easier to figure out - wm 11/26/17
+  //changed old 2017 dates need to 2018 dates
+  //added new weeks 1/3/18 -wm
+  //added by week number instead of day 1/3/18 -wm
+  //changed if(weeksnum>=1 && weeksnum <=2) to if(weeksnum>=1 && weeksnum <2) only one sheet open per week 1/14/18 -wm
+  //changed onopen() to upWeek() b/c if pend on mobile device script wouldn't run.
+  //add trigger to my account for Sunday @1AM to switch 
+  //added sleep b/c wasn't switching/hiding sheet
+  //tested manually running works; didn't work week 10 changed sleep to 800 3/6/18
+  //tested manually again and works 3/6/18
+if(weeksnum>=1 && weeksnum <2){Logger.log("Test of Week 1 -GOOD");}
+if(weeksnum>=2 && weeksnum <3){ss.setActiveSheet(ss.getSheetByName('Jan-11'));var sheet = ss.getSheetByName('Jan-04');sheet.hideSheet();}
+if(weeksnum>=3 && weeksnum <4){ss.setActiveSheet(ss.getSheetByName('Jan-18'));var sheet = ss.getSheetByName('Jan-11');sheet.hideSheet();}
+if(weeksnum>=4 && weeksnum <5){ss.setActiveSheet(ss.getSheetByName('Jan-25'));var sheet = ss.getSheetByName('Jan-18');sheet.hideSheet();}
+if(weeksnum>=5 && weeksnum <6){ss.setActiveSheet(ss.getSheetByName('Feb-01'));var sheet = ss.getSheetByName('Jan-25');sheet.hideSheet();}
+if(weeksnum>=6 && weeksnum <7){ss.setActiveSheet(ss.getSheetByName('Feb-08'));var sheet = ss.getSheetByName('Feb-01');sheet.hideSheet();}
+if(weeksnum>=7 && weeksnum <8){ss.setActiveSheet(ss.getSheetByName('Feb-15'));var sheet = ss.getSheetByName('Feb-08');sheet.hideSheet();}
+if(weeksnum>=8 && weeksnum <9){ss.setActiveSheet(ss.getSheetByName('Feb-22'));Utilities.sleep(200);var sheet = ss.getSheetByName('Feb-15');sheet.hideSheet();}
+if(weeksnum>=9 && weeksnum <10){ss.setActiveSheet(ss.getSheetByName('Mar-01'));Utilities.sleep(200);var sheet = ss.getSheetByName('Feb-22');sheet.hideSheet();}
+if(weeksnum>=10 && weeksnum <11){ss.setActiveSheet(ss.getSheetByName('Mar-08'));Utilities.sleep(800);var sheet = ss.getSheetByName('Mar-01');sheet.hideSheet();}
+   // START SPRING BREAK
+   // END SPRING BREAK
+if(weeksnum>=13 && weeksnum <14){ss.setActiveSheet(ss.getSheetByName('Mar-29'));Utilities.sleep(800);var sheet = ss.getSheetByName('Mar-22');sheet.hideSheet();}
+if(weeksnum>=14 && weeksnum <15){ss.setActiveSheet(ss.getSheetByName('Apr-05'));Utilities.sleep(800);var sheet = ss.getSheetByName('Mar-29');sheet.hideSheet();}
+if(weeksnum>=15 && weeksnum <16){ss.setActiveSheet(ss.getSheetByName('Apr-12'));Utilities.sleep(800);var sheet = ss.getSheetByName('Apr-05');sheet.hideSheet();}
+if(weeksnum>=16 && weeksnum <17){ss.setActiveSheet(ss.getSheetByName('Apr-19'));Utilities.sleep(800);var sheet = ss.getSheetByName('Apr-12');sheet.hideSheet();}
+if(weeksnum>=17 && weeksnum <18){ss.setActiveSheet(ss.getSheetByName('Apr-26'));Utilities.sleep(800);var sheet = ss.getSheetByName('Apr-19');sheet.hideSheet();}
+if(weeksnum>=18 && weeksnum <19){ss.setActiveSheet(ss.getSheetByName('May-03'));Utilities.sleep(800);var sheet = ss.getSheetByName('Apr-26');sheet.hideSheet();}
+if(weeksnum>=19 && weeksnum <20){ss.setActiveSheet(ss.getSheetByName('May-10'));Utilities.sleep(800);var sheet = ss.getSheetByName('May-03');sheet.hideSheet();}
+if(weeksnum>=20 && weeksnum <21){ss.setActiveSheet(ss.getSheetByName('May-17'));Utilities.sleep(800);var sheet = ss.getSheetByName('May-10');sheet.hideSheet();}
+if(weeksnum>=21 && weeksnum <22){ss.setActiveSheet(ss.getSheetByName('May-24'));Utilities.sleep(800);var sheet = ss.getSheetByName('May-17');sheet.hideSheet();}
+if(weeksnum>=22 && weeksnum <23){ss.setActiveSheet(ss.getSheetByName('May-31'));Utilities.sleep(800);var sheet = ss.getSheetByName('May-24');sheet.hideSheet();}
+if(weeksnum>=23 && weeksnum <24){ss.setActiveSheet(ss.getSheetByName('Jun-07'));Utilities.sleep(800);var sheet = ss.getSheetByName('May-31');sheet.hideSheet();}
+if(weeksnum>=24 && weeksnum <25){ss.setActiveSheet(ss.getSheetByName('Jun-14'));Utilities.sleep(800);var sheet = ss.getSheetByName('Jun-07');sheet.hideSheet();}
+if(weeksnum>=25 && weeksnum <26){ss.setActiveSheet(ss.getSheetByName('Jun-21'));Utilities.sleep(800);var sheet = ss.getSheetByName('Jun-14');sheet.hideSheet();}
 // END SCHOOL YEAR
-  
+  // Below code logs the active spreadsheet.
+  Logger.log("active spreadsheet "+ ss.getActiveSheet().getName()); 
 //START SCHOOL YEAR  
   //updated through xmas break 2017
 if (day >=243 && day  <= 250){ss.setActiveSheet(ss.getSheetByName('Sep-07'));var sheet = ss.getSheetByName('June 8');sheet.hideSheet();}
@@ -245,4 +249,60 @@ function removeHidden() {
         .map(function (sh) {
             if (sh.isSheetVisible()) ss.deleteSheet(sh)
         })
+}
+function CreateNewWeeksFromList() {
+  
+  
+ // var s = ss.getSheetByName("A1+"); //or whichever sheet you wish to duplicate
+ // for (i=19;i>0;--i) s.copyTo(ss).setName("A"+i);
+ // ss.setActiveSheet(s);
+ // ss.moveActiveSheet(1);
+  
+  //2018-03-06 tested works
+  var ss        = SpreadsheetApp.getActiveSpreadsheet();
+ // var s = ss.getSheetByName("A1+"); //or whichever sheet you wish to duplicate
+  // formatted on 'pickup days' tab in sheet
+  Logger.log('ss');
+  var weekObjects = [
+  {'name':'Apr-05'},
+ {'name':'Apr-12'},
+ {'name':'Apr-19'},
+ {'name':'Apr-26'},
+ {'name':'May-03'},
+ {'name':'May-10'},
+ {'name':'May-17'},
+ {'name':'May-24'},
+ {'name':'May-31'},
+ {'name':'Jun-07'},
+ {'name':'Jun-14'},
+ {'name':'Jun-21'} ]
+  var template = ss.getSheetByName('Master');
+  for ( var i=0; i < weekObjects.length; i++) {
+      Logger.log(template);
+    var WeekName = weekObjects[i].name;
+
+    // get the sheets to check you are not creating a duplicate sheet 
+    var sheets = ss.getSheets();
+    var ok = true;
+
+    // loop through the sheets and check a duplicate exist 
+    for ( var j=0; j<sheets.length;j++ ) {
+      if ( sheets[j].getName() == WeekName ) {
+        ok = false;
+        Logger.log('duplicate');
+      }
+    }
+
+    if ( ok ) {
+      template.copyTo(ss).setName(WeekName);
+      Logger.log('WeekName '&WeekName);
+      var sheet = SpreadsheetApp.getActiveSheet();
+      sheet.hideSheet();
+
+    } else {
+
+      // do whatever you need to do if week name is duplicate
+
+    }
+  }
 }
